@@ -19,7 +19,7 @@ get-tools:
 		wget 'https://github.com/eunomia-bpf/eunomia-bpf/releases/latest/download/ecli-aarch64' -O tools/ecli && chmod +x tools/ecli; \
 	fi
 
-install:
+install-dependencies:
 	@sudo apt update
 	@sudo apt-get install -y --no-install-recommends \
         libelf1 libelf-dev zlib1g-dev \

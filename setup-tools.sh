@@ -1,3 +1,4 @@
+make install-dependencies
 make get-tools
 
 TOOLS_PATH="${PWD}/tools"
