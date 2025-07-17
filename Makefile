@@ -18,9 +18,9 @@ get-tools:
 		wget 'https://github.com/eunomia-bpf/eunomia-bpf/releases/latest/download/ecli-aarch64' -O tools/ecli && chmod +x tools/ecli; \
 	fi
 	
-install-sbin:
-	@sudo ln -sf tools/ecc /usr/sbin/ecc
-	@sudo ln -sf tools/ecli /usr/sbin/ecli
+install-sys:
+	@sudo ln -sf $(realpath tools/ecc) /usr/local/bin/ecc
+	@sudo ln -sf $(realpath tools/ecli) /usr/local/bin/ecli
 
 setup-tools: get-tools install-sbin
 	@echo "Tools installed successfully."
@@ -37,6 +37,6 @@ clean:
 	@find . -type f -name '*.json' -delete
 
 dist-clean: clean
-	@sudo rm /usr/sbin/ecc || true
-	@sudo rm /usr/sbin/ecli || true
+	@sudo rm /usr/local/bin/ecc || true
+	@sudo rm /usr/local/bin/ecli || true
 	@rm -rf tools
