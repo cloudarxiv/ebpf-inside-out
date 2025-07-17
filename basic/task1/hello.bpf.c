@@ -4,9 +4,10 @@
 #include <bpf/bpf_helpers.h>
 #include <bpf/bpf_tracing.h>
 
-typedef unsigned int u32;
 typedef int pid_t;
-const pid_t pid_filter = 0;
+
+// Step 1: Add a global variable to store a process ID (Default to 0)
+/// @description "Process ID to trace"
 
 char LICENSE[] SEC("license") = "Dual BSD/GPL";
 
@@ -14,8 +15,9 @@ SEC("tp/syscalls/sys_enter_write")
 int handle_tp(void *ctx)
 {
 	pid_t pid = bpf_get_current_pid_tgid() >> 32;
-	if (pid_filter && pid != pid_filter)
-		return 0;
+
+	// Step 2: Only allow the given PID to print
+
 	bpf_printk("Hello eBPF: sys_enter_write triggered BPF from PID %d.\n", pid);
 	return 0;
 }

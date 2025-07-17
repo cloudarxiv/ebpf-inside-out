@@ -29,3 +29,13 @@ int BPF_KRETPROBE(do_unlinkat_exit, long ret)
 	bpf_printk("KPROBE EXIT: pid = %d, ret = %ld\n", pid, ret);
 	return 0;
 }
+
+// Task 1: Add a kprobe for mkdir
+
+
+
+// Task 2: Add a kprobe for rmdir
+
+
+
+
