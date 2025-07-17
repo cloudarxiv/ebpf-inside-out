@@ -1,8 +1,10 @@
 .PHONY: get-tools install clean dist-clean
 
 all:
-	@echo "No default target specified. Please run 'make setup-tools' to install required tools."
-	@echo "Or run 'make install-dependencies' to install system dependencies."
+	@echo "No default target specified."
+	@echo ""
+	@echo "Please run 'make install-deps' to install system dependencies."
+	@echo "Or run 'make setup-tools' to install required tools."
 
 get-tools:
 	@mkdir -p tools
@@ -22,11 +24,11 @@ install-sys:
 	@sudo ln -sf $(realpath tools/ecc) /usr/local/bin/ecc
 	@sudo ln -sf $(realpath tools/ecli) /usr/local/bin/ecli
 
-setup-tools: get-tools install-sbin
+setup-tools: get-tools install-sys
 	@echo "Tools installed successfully."
 	@echo "You can now use 'ecc' and 'ecli' commands."
 
-install-dependencies:
+install-deps:
 	@sudo apt update
 	@sudo apt-get install -y --no-install-recommends \
         libelf1 libelf-dev zlib1g-dev \
