@@ -36,42 +36,4 @@ int BPF_URETPROBE(printret, const void *ret)
 	return 0;
 };
 
-
-SEC("uprobe//usr/bin/curl:operate")
-int BPF_UPROBE(printcurlargs, int argc, char **argv)
-{
-	char str[MAX_LINE_SIZE];
-	char comm[TASK_COMM_LEN];
-	u32 pid;
-
-	bpf_get_current_comm(&comm, sizeof(comm));
-
-	pid = bpf_get_current_pid_tgid() >> 32;
-
-
-	bpf_printk("PID %d (%s) curl args: %s ", pid, comm, str);
-
-	for (int i = 0; i < 8; i++) {
-		if (i >= argc) {
-			break;
-		}
-		char *arg;
-		if (bpf_probe_read_user(&arg, sizeof(arg), &argv[i]) < 0) {
-			bpf_printk("Failed to read argument %d", i);
-			continue;
-		}
-		if (!arg) {
-			bpf_printk("Argument %d is NULL", i);
-			continue;
-		}
-		if (bpf_probe_read_user_str(str, sizeof(str), arg) < 0) {
-			bpf_printk("Failed to read argument %d", i);
-			continue;
-		}
-		bpf_printk("arg[%d]: %s ", i, str);
-	}
-
-	return 0;
-}
-
 char LICENSE[] SEC("license") = "GPL";
