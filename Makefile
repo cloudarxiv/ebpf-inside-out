@@ -3,7 +3,7 @@
 
 # clean:
 # 	make -C src clean
-.PHONY: get-tools install
+.PHONY: get-tools install clean
 
 get-tools:
 	@mkdir -p tools
@@ -24,3 +24,9 @@ install-dependencies:
 	@sudo apt-get install -y --no-install-recommends \
         libelf1 libelf-dev zlib1g-dev \
         make clang llvm
+
+clean:
+	@echo "Cleaning up..."
+	@rm -rf tools
+	@find . -type f -name '*.o' -delete
+	@find . -type f -name '*.json' -delete
