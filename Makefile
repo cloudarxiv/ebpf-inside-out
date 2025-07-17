@@ -1,5 +1,9 @@
 .PHONY: get-tools install clean dist-clean
 
+all:
+	@echo "No default target specified. Please run 'make setup-tools' to install required tools."
+	@echo "Or run 'make install-dependencies' to install system dependencies."
+
 get-tools:
 	@mkdir -p tools
 	@echo "Installing required tools..."
@@ -13,8 +17,14 @@ get-tools:
 		wget 'https://github.com/eunomia-bpf/eunomia-bpf/releases/latest/download/ecc-aarch64' -O tools/ecc && chmod +x tools/ecc; \
 		wget 'https://github.com/eunomia-bpf/eunomia-bpf/releases/latest/download/ecli-aarch64' -O tools/ecli && chmod +x tools/ecli; \
 	fi
-	@sudo ln -sf tools/ecc /usr/bin/ecc
-	@sudo ln -sf tools/ecli /usr/bin/ecli
+	
+install-sbin:
+	@sudo ln -sf tools/ecc /usr/sbin/ecc
+	@sudo ln -sf tools/ecli /usr/sbin/ecli
+
+setup-tools: get-tools install-sbin
+	@echo "Tools installed successfully."
+	@echo "You can now use 'ecc' and 'ecli' commands."
 
 install-dependencies:
 	@sudo apt update
@@ -27,6 +37,6 @@ clean:
 	@find . -type f -name '*.json' -delete
 
 dist-clean: clean
-	@sudo rm /usr/bin/ecc || true
-	@sudo rm /usr/bin/ecli || true
+	@sudo rm /usr/sbin/ecc || true
+	@sudo rm /usr/sbin/ecli || true
 	@rm -rf tools
