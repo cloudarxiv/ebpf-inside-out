@@ -1,0 +1,6 @@
+.direnv
+.vscode
+package.json
+*.o
+*.skel.json
+tools/
