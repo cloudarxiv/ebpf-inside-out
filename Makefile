@@ -1,8 +1,3 @@
-# build:
-# 	make -C src
-
-# clean:
-# 	make -C src clean
 .PHONY: get-tools install clean dist-clean
 
 get-tools:
@@ -30,6 +25,8 @@ install-dependencies:
 clean:
 	@find . -type f -name '*.o' -delete
 	@find . -type f -name '*.json' -delete
+	@sudo rm /usr/local/bin/ecc
+	@sudo rm /usr/local/bin/ecli
 
 dist-clean: clean
 	@rm -rf tools
