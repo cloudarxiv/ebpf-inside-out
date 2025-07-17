@@ -30,11 +30,24 @@ int BPF_KRETPROBE(do_unlinkat_exit, long ret)
 	return 0;
 }
 
-// Task 1: Add a kprobe for mkdir
+// Step 1: Add a kprobe for do_mkdirat
+/**
+ * Note that mkdir has different parameters than do_unlinkat.
+ * You will need to adjust the parameters in the kprobe function accordingly.
+ * 
+ * You can see prototypes in the kernel source code or documentation.
+ * https://elixir.bootlin.com/linux/v6.15.6/source/fs/internal.h#L62
+ */
 
 
 
-// Task 2: Add a kprobe for rmdir
+// Step 2: Add a kprobe for do_rmdir
+/**
+ * Similar to do_mkdirat, you will need to adjust the parameters for do_rmdir.
+ * 
+ * The function prototype can be found in the kernel source code or documentation.
+ * https://elixir.bootlin.com/linux/v6.15.6/source/fs/internal.h#L57
+ */
 
 
 
