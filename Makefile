@@ -18,6 +18,8 @@ get-tools:
 		wget 'https://github.com/eunomia-bpf/eunomia-bpf/releases/latest/download/ecc-aarch64' -O tools/ecc && chmod +x tools/ecc; \
 		wget 'https://github.com/eunomia-bpf/eunomia-bpf/releases/latest/download/ecli-aarch64' -O tools/ecli && chmod +x tools/ecli; \
 	fi
+	@sudo ln -sf tools/ecc /usr/local/bin/ecc
+	@sudo ln -sf tools/ecli /usr/local/bin/ecli
 
 install-dependencies:
 	@sudo apt update
