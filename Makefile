@@ -3,7 +3,7 @@
 
 # clean:
 # 	make -C src clean
-.PHONY: get-tools install clean
+.PHONY: get-tools install clean dist-clean
 
 get-tools:
 	@mkdir -p tools
@@ -26,7 +26,8 @@ install-dependencies:
         make clang llvm
 
 clean:
-	@echo "Cleaning up..."
-	@rm -rf tools
 	@find . -type f -name '*.o' -delete
 	@find . -type f -name '*.json' -delete
+
+dist-clean: clean
+	@rm -rf tools
