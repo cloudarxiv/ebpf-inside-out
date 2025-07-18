@@ -31,6 +31,8 @@ int lex_luthor(struct trace_event_raw_sys_enter *ctx)
     const char *buf = (const char *)ctx->args[1];
     size_t count = ctx->args[2];
 
+    // Step 3: Continue only if the write call is invoked on the stdout (fd = 1)
+
     int ret = bpf_probe_read_user_str(local_buf, sizeof(local_buf), buf);
     if (ret < 0) {
         bpf_printk("Failed to read buffer: %d\n", ret);
@@ -40,9 +42,15 @@ int lex_luthor(struct trace_event_raw_sys_enter *ctx)
     // Step 4: Remove this output
     bpf_printk("Lex Luthor: Superman said '%s' from PID %d.\n", local_buf, pid);
 
-    // Step 3: Change the output to "I am Batman" if the buffer contains "I am Superman"
+    // Step 5: Change the output to "I am Batman" if the buffer contains "I am Superman"
     /* You may use Memory Helpers and Utility Helpers to achieve this
     *  https://docs.ebpf.io/linux/helper-function/
+    *
+    *  More specifically you may be interested in `bpf_strncmp` and `bpf_probe_write_user`
+    *
+    *  Note: Since the count argument of write syscall is not changed, the total number of
+    *  characters that are written on console will be same. You can pad the string 
+    *  "I am Batman" with spaces so that the output is as expected.
     */
 
 
