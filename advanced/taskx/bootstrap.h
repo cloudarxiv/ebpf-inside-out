@@ -16,4 +16,4 @@ struct event {
 	bool exit_event;
 };
 
-#endif /* __BOOTSTRAP_H *
+#endif /* __BOOTSTRAP_H */

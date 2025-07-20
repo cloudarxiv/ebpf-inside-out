@@ -4,3 +4,4 @@ package.json
 *.o
 *.skel.json
 tools/
+.output
