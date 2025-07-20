@@ -3,12 +3,11 @@
 #include "common_kern_user.h"
 
 // Stats map
-struct
-{
-    .type = BPF_MAP_TYPE_ARRAY,
-    .key_size = sizeof(__u32),
-    .value_size = sizeof(struct datarec),
-    .max_entries = 1,
+struct {
+	__uint(type, BPF_MAP_TYPE_ARRAY);
+	__type(key, __u32);
+	__type(value, struct datarec);
+	__uint(max_entries, 1);
 } stats SEC(".maps");
 
 /* LLVM maps __sync_fetch_and_add() as a built-in function to the BPF atomic add
@@ -19,23 +18,16 @@ struct
 #endif
 
 static __always_inline
-__u32 xdp_stats_record_action(struct xdp_md *ctx, __u32 action)
+void xdp_stats_record_action(struct xdp_md *ctx)
 {
-    if (action >= XDP_ACTION_MAX)
-        return XDP_ABORTED;
-
-    if (action != XDP_PASS)
-        return action;
-
+    int key = 0;
     /* Lookup in kernel BPF-side return pointer to actual data record */
-    struct datarec *rec = bpf_map_lookup_elem(&xdp_stats_map, &action);
+    struct datarec *rec = bpf_map_lookup_elem(&stats, &key);
     if (!rec)
-        return XDP_ABORTED;
+        return;
 
     lock_xadd(&rec->rx_packets, 1);
-    /* Step #1: Add byte counters */
-
-    return action;
+    /* Step #2: Add byte counters */
 }
 
 SEC("xdp")
@@ -43,9 +35,8 @@ int xdp_parser_func(struct xdp_md *ctx)
 {
     void *data_end = (void *)(long)ctx->data_end;
     void *data = (void *)(long)ctx->data;
-
-    __u32 action = XDP_PASS; /* Default action */
-
+    int action = XDP_PASS;
 out:
-    return xdp_stats_record_action(ctx, action);
+    xdp_stats_record_action(ctx);
+    return action;
 }
