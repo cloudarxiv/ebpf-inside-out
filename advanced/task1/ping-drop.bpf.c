@@ -80,6 +80,9 @@ static __always_inline int parse_icmphdr(struct hdr_cursor *nh, void *data_end, 
 	return icmph->type; /* network-byte-order */
 }
 
+/// @ifindex 2
+/// @flags 0
+/// @xdpopts {"old_prog_fd":0}
 SEC("xdp")
 int  xdp_parser_func(struct xdp_md *ctx)
 {
@@ -108,7 +111,7 @@ int  xdp_parser_func(struct xdp_md *ctx)
 	 */
 	/* Assignment additions go below here */
 	nh_type = parse_ethhdr(&nh, data_end, &eth);
-	else if (nh_type == bpf_htons(ETH_P_IP))
+	if (nh_type == bpf_htons(ETH_P_IP))
 	{
 		nh_type = parse_iphdr(&nh, data_end, &iph);
 		if (nh_type != IPPROTO_ICMP)
@@ -124,10 +127,7 @@ int  xdp_parser_func(struct xdp_md *ctx)
 			goto out;
 		action = XDP_DROP;
 	}
-	else
-		goto out;
-
-	action = XDP_DROP;
+	
 out:
 	return action;
 }
