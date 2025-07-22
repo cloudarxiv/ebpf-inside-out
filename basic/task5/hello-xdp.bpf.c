@@ -3,7 +3,6 @@
 
 /// @ifindex 2
 /// @flags 0
-/// @xdpopts {"old_prog_fd":0}
 SEC("xdp")
 int xdp_pass(struct xdp_md* ctx) {
     void* data = (void*)(long)ctx->data;
