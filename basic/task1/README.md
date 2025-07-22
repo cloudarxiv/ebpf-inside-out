@@ -14,7 +14,7 @@ Tracepoints are a kernel static instrumentation technique, technically just trac
 Compile the eBPF program using the `ecc` command:
 
 ```console
-$ ecc .ecc hello.bpf.c
+$ ecc ecc hello.bpf.c
 Compiling bpf object...
 Packing ebpf object and config into package.json...
 ```
@@ -22,7 +22,7 @@ Packing ebpf object and config into package.json...
 Then load and run the program using the `ecli` command:
 
 ```console
-$ sudo .ecli run package.json
+$ sudo ecli run package.json
 Running eBPF program...
 ```
 
@@ -38,7 +38,7 @@ $ sudo cat /sys/kernel/debug/tracing/trace_pipe | grep "BPF triggered sys_enter_
 
 Now extend the eBPF program to print only when a specific process (e.g., `bash`) performs a write operation. You can do this by checking the PID of the process in the eBPF program and only printing the message if it matches the desired PID. To accompilish this you should use global variables.
 
-Global variables act as a data sharing mechanism in eBPF programs, allowing data interaction between user space programs and eBPF programs. This is very useful when filtering specific conditions or modifying the behavior of eBPF programs. This design allows user space programs to dynamically control the behavior of eBPF programs at runtime.
+Global variables act argument passing mechanism in eBPF programs, allowing userspace programs to provide parameters during eBPF program loading. This is very useful when filtering specific conditions or modifying the behavior of eBPF programs.
 
 Steps has been provided in the program comments to achieve this.
 
