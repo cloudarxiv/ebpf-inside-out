@@ -14,7 +14,7 @@ Tracepoints are a kernel static instrumentation technique, technically just trac
 Compile the eBPF program using the `ecc` command:
 
 ```console
-$ ecc ecc hello.bpf.c
+$ ecc hello.bpf.c
 Compiling bpf object...
 Packing ebpf object and config into package.json...
 ```
@@ -29,7 +29,7 @@ Running eBPF program...
 While the program is running, you can check the kernel trace log to see the output of the eBPF program:
 
 ```console
-$ sudo cat /sys/kernel/debug/tracing/trace_pipe | grep "BPF triggered sys_enter_write"
+$ sudo cat /sys/kernel/debug/tracing/trace_pipe
            <...>-3840345 [010] d... 3220701.101143: bpf_trace_printk: Hello eBPF: sys_enter_write triggered BPF from PID 3840345.
            <...>-3840345 [010] d... 3220701.101143: bpf_trace_printk: Hello eBPF: sys_enter_write triggered BPF from PID 3840345.
 ```
@@ -45,6 +45,9 @@ Steps have been provided in the program comments to achieve this.
 Once implemented you can see that while running the program you can pass the PID of the process you want to filter.
 
 ```console
+$ ecc hello.bpf.c
+Compiling bpf object...
+Packing ebpf object and config into package.json...
 $ ecli package.json -h
 Usage: hello_bpf [--help] [--version] [--verbose] [--pid_target VAR]
 
