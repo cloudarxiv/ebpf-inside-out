@@ -40,7 +40,7 @@ Now extend the eBPF program to print only when a specific process (e.g., `bash`)
 
 Global variables act argument passing mechanism in eBPF programs, allowing userspace programs to provide parameters during eBPF program loading. This is very useful when filtering specific conditions or modifying the behavior of eBPF programs.
 
-Steps has been provided in the program comments to achieve this.
+Steps have been provided in the program comments to achieve this.
 
 Once implemented you can see that while running the program you can pass the PID of the process you want to filter.
 
