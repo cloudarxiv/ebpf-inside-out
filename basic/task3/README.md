@@ -16,6 +16,14 @@ Compiling bpf object...
 Packing ebpf object and config into package.json...
 ```
 
+In another console, compile and run the superman program. First it will print it's PID and then
+it will print "I am Superman" repeatedly:
+
+```console
+$ clang superman.c -o superman
+$ ./superman
+```
+
 Then load and run the program using the `ecli` command:
 
 ```console

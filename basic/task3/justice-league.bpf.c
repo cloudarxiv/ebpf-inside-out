@@ -33,6 +33,8 @@ int batman(struct trace_event_raw_sys_enter *ctx)
 
     // Step 3: Continue only if the write call is invoked on the stdout (fd = 1)
 
+    // bpf_probe_read_user_str safely reads a string allocated in userspace memory
+    // Ref: https://docs.ebpf.io/linux/helper-function/bpf_probe_read_user_str/
     int ret = bpf_probe_read_user_str(local_buf, sizeof(local_buf), buf);
     if (ret < 0) {
         bpf_printk("Failed to read buffer: %d\n", ret);
