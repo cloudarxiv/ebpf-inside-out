@@ -44,7 +44,9 @@ int execve_entry(struct trace_event_raw_sys_enter *ctx)
     
     __sync_fetch_and_add(&map_curr_count, 1);
     bpf_map_update_elem(&values, &pid, &count, BPF_ANY);
-    bpf_printk("PID %d (%s) started execve", pid, count.comm);  
+    bpf_printk("PID %d (%s) started execve", pid, count.comm);
+
+    return 0;
 }
 
 SEC("tp/syscalls/sys_enter_exit")
