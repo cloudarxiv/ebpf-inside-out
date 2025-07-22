@@ -1,4 +1,4 @@
-# Basic Task 3: Using eBPF maps to store and retrieve data
+# Basic Task 4: Using eBPF maps to store and retrieve data
 In this task, we will create an eBPF programs that uses eBPF maps. There are five eBPF programs in this task, each attached to diferent tracepoints. When a `/usr/bin/bash` process is started, the eBPF program will use the pid as the key and store the process name in a map. During reads and writes of the process the eBPF program will also update the map with the current count of reads and writes. When the process exits, the eBPF program will print the pid, process name, and the number of reads and writes.
 
 ## Basic information
