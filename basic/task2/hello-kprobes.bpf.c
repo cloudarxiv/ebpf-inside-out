@@ -9,7 +9,7 @@
 char LICENSE[] SEC("license") = "Dual BSD/GPL";
 
 SEC("kprobe/do_unlinkat")
-int BPF_KPROBE(do_unlinkat, int dfd, struct filename *f)
+int BPF_KPROBE(probe_do_unlinkat_entry, int dfd, struct filename *f)
 {
 	pid_t pid;
 	const char *filename;
@@ -21,7 +21,7 @@ int BPF_KPROBE(do_unlinkat, int dfd, struct filename *f)
 }
 
 SEC("kretprobe/do_unlinkat")
-int BPF_KRETPROBE(do_unlinkat_exit, long ret)
+int BPF_KRETPROBE(probe_do_unlinkat_exit, long ret)
 {
 	pid_t pid;
 
