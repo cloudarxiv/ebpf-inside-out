@@ -11,7 +11,7 @@ typedef int pid_t;
 char LICENSE[] SEC("license") = "Dual BSD/GPL";
 
 SEC("tp/syscalls/sys_enter_write")
-int lex_luthor(struct trace_event_raw_sys_enter *ctx)
+int batman(struct trace_event_raw_sys_enter *ctx)
 {
     char local_buf[256];
 	pid_t pid = bpf_get_current_pid_tgid() >> 32;
@@ -40,7 +40,7 @@ int lex_luthor(struct trace_event_raw_sys_enter *ctx)
     }
 
     // Step 4: Remove this output
-    bpf_printk("Lex Luthor: Superman said '%s' from PID %d.\n", local_buf, pid);
+    bpf_printk("Batman: Superman said '%s' from PID %d.\n", local_buf, pid);
 
     // Step 5: Change the output to "I am Batman" if the buffer contains "I am Superman"
     /* You may use Memory Helpers and Utility Helpers to achieve this
