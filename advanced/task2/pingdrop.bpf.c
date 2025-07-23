@@ -10,36 +10,31 @@
 #include <bpf/bpf_endian.h>
 
 /* Header cursor to keep track of current parsing position */
-struct hdr_cursor {
+struct hdr_cursor
+{
 	void *pos;
 };
 
 /* Packet parsing helpers.
  *
- * Each helper parses a packet header, including doing bounds checking, and
- * returns the type of its contents if successful, and -1 otherwise.
+ * Each helper parses a packet header returns the type of its contents
  *
  * For Ethernet and IP headers, the content type is the type of the payload
- * (h_proto for Ethernet, nexthdr for IPv4), for ICMP it is the ICMP type field.
- * All return values are in host byte order.
+ * (h_proto for Ethernet, protocol for IPv4), for ICMP it is the ICMP type field.
+ * All return values are in network byte order.
  */
 static __always_inline int parse_ethhdr(struct hdr_cursor *nh,
-					void *data_end,
-					struct ethhdr **ethhdr)
+										void *data_end,
+										struct ethhdr **ethhdr)
 {
 	struct ethhdr *eth = nh->pos;
 	int hdrsize = sizeof(*eth);
-
-	/* Step 1: Byte-count bounds check; check if current pointer + size of header
-	 * is after data_end.
-	 */
 
 	nh->pos += hdrsize;
 	*ethhdr = eth;
 
 	__u16 h_proto = eth->h_proto; /* network-byte-order */
-
-	return h_proto; /* network-byte-order */
+	return h_proto;				  /* network-byte-order */
 }
 
 static __always_inline int parse_iphdr(struct hdr_cursor *nh, void *data_end, struct iphdr **iphdr)
@@ -47,37 +42,26 @@ static __always_inline int parse_iphdr(struct hdr_cursor *nh, void *data_end, st
 	struct iphdr *iph = nh->pos;
 	int hdrsize;
 
-	/* Step 2: Byte-count bounds check; check if current pointer + size of header
-	 * is after data_end.
-	 */
-
 	hdrsize = iph->ihl * 4;
-	if (hdrsize < sizeof(*iph))
-		return -1;
-
-	if (nh->pos + hdrsize > data_end)
-		return -1;
-
 	nh->pos += hdrsize;
 	*iphdr = iph;
 
 	return iph->protocol;
 }
 
-/* Step 3: Implement icmp parser and return type of icmp packet */
+/* Step 1: Implement icmp parser and return type of icmp packet */
 
 
 /// @ifindex 2
 /// @flags 0
-/// @xdpopts {"old_prog_fd":0}
 SEC("xdp")
-int  xdp_parser_func(struct xdp_md *ctx)
+int xdp_parser_func(struct xdp_md *ctx)
 {
 	void *data_end = (void *)(long)ctx->data_end;
 	void *data = (void *)(long)ctx->data;
 	struct ethhdr *eth;
 	struct iphdr *iph;
-	struct icmphdr *icmph; /* To be used in Step 3 */
+	struct icmphdr *icmph; /* To be used in Step 2 */
 
 	/* Default action XDP_PASS, imply everything we couldn't parse, or that
 	 * we don't want to deal with, we just pass up the stack and let the
@@ -85,7 +69,7 @@ int  xdp_parser_func(struct xdp_md *ctx)
 	 */
 	__u32 action = XDP_PASS; /* Default action */
 
-        /* These keep track of the next header type and iterator pointer */
+	/* These keep track of the next header type and iterator pointer */
 	struct hdr_cursor nh;
 	int nh_type;
 
@@ -94,7 +78,7 @@ int  xdp_parser_func(struct xdp_md *ctx)
 
 	/* Packet parsing in steps: Get each header one at a time, aborting if
 	 * parsing fails. Each helper function does sanity checking (is the
-	 * header type in the packet correct?), and bounds checking.
+	 * header type in the packet correct?).
 	 */
 	/* Assignment additions go below here */
 	nh_type = parse_ethhdr(&nh, data_end, &eth);
@@ -104,20 +88,15 @@ int  xdp_parser_func(struct xdp_md *ctx)
 		if (nh_type != IPPROTO_ICMP)
 			goto out;
 
-		/* To be imlemented 
-		* Uncomment after implementing parse_icmphdr
-		* and return the ICMP type.
+		/* Step 2
+		* Check if the ICMP packet is an echo request
 		*/
-		// nh_type = parse_icmphdr(&nh, data_end, &icmph);
-		// if (nh_type != (ICMP_ECHO))
-		// 	goto out;
 
-		// int seq = bpf_ntohs(icmph->un.echo.sequence);
-		// if (seq % 2 != 0)
-		// 	goto out;
-		// action = XDP_DROP;
+		/* Step 3: if the packet is icmp and sequence number is odd then drop it */
+
+		
 	}
-	
+
 out:
 	return action;
 }
