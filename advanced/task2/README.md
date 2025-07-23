@@ -2,8 +2,8 @@
 In this task, we will extend our understanding of eBPF by implementing a program that parses ICMP packets and drops every odd packets.
 
 To achieve this you have to implement the following:
-1. **Fix the bounds checking error**: There is no bound checking logic in this program, so the program will be rejected by the verifier (test this by running ecli run after compiling it).
-2. **Implement the `parse_icmphdr` function**: This function should parse the ICMP header and return the ICMP type. The function should also perform bounds checking to ensure that it does not read beyond the end of the packet data.
+1. **Implement the `parse_icmphdr` function**: This function should parse the ICMP header and return the ICMP type.
+2. **Modify the main function**: In the main function, after parsing the Ethernet and IP headers, check if the packet is an ICMP echo request. If it is, check the sequence number of the ICMP packet. If the sequence number is odd, drop the packet.
 
 ## Running the eBPF program
 Set the ifindex of the network interface you want to attach the XDP program to. You can find the ifindex by running `ip link` and looking for the interface name (e.g., `eth0`, `ens33`, etc.).
